@@ -37,7 +37,7 @@ def publish_temp(client):
     except RuntimeError:
         pass
 
-client = mqtt.Client("Temp")
+client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1,"Temp")
 client.username_pw_set(USERNAME, PASSWORD)
 client.on_connect = on_connect
 client.on_message = on_message
