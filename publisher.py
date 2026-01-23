@@ -1,21 +1,24 @@
-#!/usr/bin/env python3
 import time, board, adafruit_dht
 import paho.mqtt.client as mqtt
 
+# MQTT-Broker-Konfiguration
 BROKER = "10.100.240.11"
 PORT   = 1883
 TOPIC_TEMP = "house/dht22/temperature"
 USERNAME = "pi"
 PASSWORD = "test"
 
+# DHT22-Sensor initialisieren
 dht = adafruit_dht.DHT22(board.D4)
 
+# MQTT-Client erstellen und verbinden
 client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1, "TempPublisher")
 client.username_pw_set(USERNAME, PASSWORD)
 client.connect(BROKER, PORT)
 client.loop_start()
 
 try:
+    # Endlosschleife zum Senden der Temperatur
     while True:
         try:
             t = dht.temperature
@@ -23,6 +26,7 @@ try:
             print(f"PUB sent {t:.1f}°C")
             time.sleep(5)
         except RuntimeError:
+            # Lesefehler ignorieren
             time.sleep(2)
 
 finally:
